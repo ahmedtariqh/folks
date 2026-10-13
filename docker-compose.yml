@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: folks-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: folks
+      POSTGRES_PASSWORD: folks_password
+      POSTGRES_DB: folks_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: folks-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: folks-litellm
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgresql://folks:folks_password@postgres:5432/folks_db
+      - STORE_MODEL_IN_DB=True
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  redis_data:
