@@ -25,14 +25,15 @@ class OnboardingLeadAgentSchema(BaseModel):
 
 class OnboardingAdvisorSchema(BaseModel):
     name: Optional[str] = Field(default="Dr. Aris Thorne")
-    domain: Optional[str] = Field(default="DISTRIBUTED_SYSTEMS")
-    knowledge_title: Optional[str] = Field(default="Distributed Consensus & Lock Invariants")
+    domain: Optional[str] = Field(default="Distributed Systems & Resilience")
+    knowledge_title: Optional[str] = Field(default="Lock Invariants and Sweeper Policies")
     knowledge_content: Optional[str] = Field(default="State machine invariants: Kanban holds primary lock, War Rooms are ephemeral subroutines. Heartbeats must ping every 15s; expired locks must reap to DLQ.")
 
 class OnboardingTaskSchema(BaseModel):
-    title: Optional[str] = Field(default="Verify Local Host Daemon 15s Heartbeat Ping")
-    description: Optional[str] = Field(default="Establish WebSocket handshake with /ws/daemon/{daemon_id} and maintain 15-second heartbeat intervals.")
+    title: Optional[str] = Field(default="Confirm system readiness, tool availability, and knowledge base access")
+    description: Optional[str] = Field(default="Verify that the execution daemon, LLM provider, available tools, and domain knowledge bases are fully accessible and operating correctly.")
     priority: Optional[str] = Field(default="HIGH")
+
 
 class OnboardingSubmitRequest(BaseModel):
     organization: OnboardingOrganizationSchema

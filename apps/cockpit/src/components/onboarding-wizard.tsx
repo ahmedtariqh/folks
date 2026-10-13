@@ -39,16 +39,18 @@ export function OnboardingWizard({ onCompleted }: OnboardingWizardProps) {
 
   // Advisor State
   const [advisorName, setAdvisorName] = useState("Dr. Aris Thorne");
-  const [advisorDomain, setAdvisorDomain] = useState("DISTRIBUTED_SYSTEMS");
+  const [advisorDomain, setAdvisorDomain] = useState("Distributed Systems & Resilience");
   const [advisorDocTitle, setAdvisorDocTitle] = useState("Lock Invariants and Sweeper Policies");
   const [advisorDocContent, setAdvisorDocContent] = useState(
     "Kanban holds primary lock. Daemons must emit 15s heartbeats. Expired locks after 60s MUST reap to DLQ."
   );
 
   // Initial Task
-  const [taskTitle, setTaskTitle] = useState("Establish Host Daemon WebSocket Handshake & Telemetry");
+  const [taskTitle, setTaskTitle] = useState(
+    "Confirm system readiness, tool availability, and knowledge base access"
+  );
   const [taskDesc, setTaskDesc] = useState(
-    "Connect execution daemon to /ws/daemon/{daemon_id}, stream stdout telemetry chunks, and verify 15s heartbeats."
+    "Verify that the execution daemon, LLM provider, available tools, and domain knowledge bases are fully accessible and operating correctly."
   );
   const [taskPriority, setTaskPriority] = useState("HIGH");
 
@@ -490,16 +492,14 @@ export function OnboardingWizard({ onCompleted }: OnboardingWizardProps) {
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Domain</label>
-                  <select
+                  <label className="block font-semibold text-slate-700 mb-1">Domain Authority (Free-form)</label>
+                  <input
+                    type="text"
                     value={advisorDomain}
                     onChange={(e) => setAdvisorDomain(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value="DISTRIBUTED_SYSTEMS">Distributed Systems</option>
-                    <option value="SECURITY_COMPLIANCE">Security & Zero-Trust</option>
-                    <option value="ENTERPRISE_ARCHITECTURE">Enterprise Architecture</option>
-                  </select>
+                    placeholder="e.g. Distributed Systems & Resilience, Security & Zero-Trust"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white"
+                  />
                 </div>
               </div>
               <div>

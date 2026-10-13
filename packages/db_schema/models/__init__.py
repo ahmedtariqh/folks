@@ -9,6 +9,7 @@ from .knowledge_base import KnowledgeBase
 from .advisor import Advisor, AdvisorKnowledgeLink
 from .advisory_session import AdvisorySession
 from .system_config import LLMProviderConfig, SystemSetting
+from .agent_message import AgentMessage
 
 __all__ = [
     "Base",
@@ -28,5 +29,7 @@ __all__ = [
     "AdvisorySession",
     "LLMProviderConfig",
     "SystemSetting",
+    "AgentMessage",
 ]
+
 

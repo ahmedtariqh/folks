@@ -346,12 +346,8 @@ def get_dashboard_html() -> str:
                 <input id="obAdvName" type="text" value="Dr. Aris Thorne" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white">
               </div>
               <div>
-                <label class="block font-semibold text-slate-700 mb-1">Domain Authority</label>
-                <select id="obAdvDomain" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-emerald-500">
-                  <option value="DISTRIBUTED_SYSTEMS" selected>Distributed Systems & Resilience</option>
-                  <option value="SECURITY_COMPLIANCE">Security & Zero-Trust Compliance</option>
-                  <option value="ENTERPRISE_ARCHITECTURE">Enterprise Software Architecture</option>
-                </select>
+                <label class="block font-semibold text-slate-700 mb-1">Domain Authority (Free-form)</label>
+                <input id="obAdvDomain" type="text" value="Distributed Systems & Resilience" placeholder="e.g. Distributed Systems & Resilience, Security & Zero-Trust" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white">
               </div>
             </div>
 
@@ -385,12 +381,12 @@ def get_dashboard_html() -> str:
           <div class="space-y-4 text-xs">
             <div>
               <label class="block font-semibold text-slate-700 mb-1">Task Title</label>
-              <input id="obTaskTitle" type="text" value="Establish Host Daemon WebSocket Handshake & Telemetry" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
+              <input id="obTaskTitle" type="text" value="Confirm system readiness, tool availability, and knowledge base access" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-900 text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
             </div>
 
             <div>
               <label class="block font-semibold text-slate-700 mb-1">Description & Acceptance Criteria</label>
-              <textarea id="obTaskDesc" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white">Start the CLI companion daemon, establish connection to /ws/daemon/{daemon_id}, stream stdout telemetry chunks, and verify 15s heartbeats.</textarea>
+              <textarea id="obTaskDesc" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white">Verify that the execution daemon, LLM provider, available tools, and domain knowledge bases are fully accessible and operating correctly.</textarea>
             </div>
 
             <div>
@@ -532,27 +528,110 @@ def get_dashboard_html() -> str:
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="flex items-center space-x-1 border-b border-slate-200 pb-px">
-      <button onclick="switchTab('kanban')" id="tabKanban" class="tab-btn px-4 py-2.5 text-xs font-bold text-emerald-700 border-b-2 border-emerald-600 transition flex items-center space-x-2">
+    <div class="flex items-center space-x-1 border-b border-slate-200 pb-px overflow-x-auto">
+      <button onclick="switchTab('ceo')" id="tabCeo" class="tab-btn px-4 py-2.5 text-xs font-bold text-emerald-700 border-b-2 border-emerald-600 transition flex items-center space-x-2 shrink-0">
+        <span>👑</span>
+        <span>Executive Office (CEO)</span>
+      </button>
+      <button onclick="switchTab('kanban')" id="tabKanban" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2 shrink-0">
         <span>📋</span>
         <span>Kanban Board</span>
       </button>
-      <button onclick="switchTab('advisors')" id="tabAdvisors" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2">
+      <button onclick="switchTab('hierarchy')" id="tabHierarchy" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2 shrink-0">
+        <span>🏢</span>
+        <span>Team Hierarchy</span>
+      </button>
+      <button onclick="switchTab('agents')" id="tabAgents" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2 shrink-0">
+        <span>🤖</span>
+        <span>Agent Roster</span>
+      </button>
+      <button onclick="switchTab('advisors')" id="tabAdvisors" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2 shrink-0">
         <span>🧠</span>
         <span>Board of Advisors</span>
       </button>
-      <button onclick="switchTab('copilot')" id="tabCopilot" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2">
+      <button onclick="switchTab('copilot')" id="tabCopilot" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2 shrink-0">
         <span>💬</span>
-        <span>Owner Copilot (Typed API)</span>
+        <span>Owner Copilot</span>
       </button>
-      <button onclick="switchTab('telemetry')" id="tabTelemetry" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2">
+      <button onclick="switchTab('telemetry')" id="tabTelemetry" class="tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2 shrink-0">
         <span>📟</span>
-        <span>Live Telemetry Terminal</span>
+        <span>Live Telemetry</span>
       </button>
     </div>
 
-    <!-- TAB 1: KANBAN BOARD (Pure Database Records) -->
-    <div id="viewKanban" class="space-y-4">
+    <!-- TAB 1: CEO EXECUTIVE OFFICE & DELEGATION -->
+    <div id="viewCeo" class="space-y-4">
+      <!-- CEO Command Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-xl p-5 shadow-sm border border-slate-700">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-emerald-500 p-0.5 shadow-md shrink-0">
+              <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center text-xl">
+                👑
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2.5">
+                <h2 id="ceoHeaderName" class="text-base font-bold text-white tracking-tight">Lead Orchestrator (CEO)</h2>
+                <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold" id="ceoHeaderStatus">IDLE</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" id="ceoHeaderModel">Model: auto</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700" id="ceoHeaderBudget">Budget: $100</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-1" id="ceoHeaderRole">Chief Executive Agent & System Orchestrator</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="requestCeoReport()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-3.5 py-2 rounded-lg shadow-sm transition flex items-center space-x-1.5">
+              <span>📊</span>
+              <span>Generate Status Report</span>
+            </button>
+            <button onclick="openDelegateModal()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-3.5 py-2 rounded-lg shadow-sm transition flex items-center space-x-1.5">
+              <span>🎯</span>
+              <span>Delegate New Task</span>
+            </button>
+            <button onclick="fetchCeoHistory()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg border border-slate-700 transition" title="Refresh conversation">
+              <span>🔄</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Directive Prompts -->
+      <div class="flex items-center space-x-2 text-xs text-slate-500 overflow-x-auto py-1">
+        <span class="text-slate-400 shrink-0 font-medium">Quick Directives:</span>
+        <button onclick="sendCeoQuickPrompt('Generate a comprehensive executive status report covering tasks, team workloads, lock health, and any dead-letter queue items.')" class="bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 px-2.5 py-1 rounded-full whitespace-nowrap transition shadow-2xs">
+          📊 "Generate executive status report"
+        </button>
+        <button onclick="sendCeoQuickPrompt('Are there any active lock bottlenecks, expired tasks, or blocked agents right now?')" class="bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 px-2.5 py-1 rounded-full whitespace-nowrap transition shadow-2xs">
+          🔍 "Check for lock bottlenecks or blocked agents"
+        </button>
+        <button onclick="sendCeoQuickPrompt('Summarize our virtual team hierarchy and active workload distribution.')" class="bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 px-2.5 py-1 rounded-full whitespace-nowrap transition shadow-2xs">
+          🏢 "Summarize team hierarchy & workloads"
+        </button>
+      </div>
+
+      <!-- CEO Chat Stream Area -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden flex flex-col h-[520px]">
+        <div id="ceoChatHistory" class="flex-1 p-4 overflow-y-auto space-y-3.5 custom-scroll bg-slate-50/50">
+          <div class="p-4 text-center text-slate-400 text-xs italic">
+            Connecting to CEO executive channel...
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+          <input id="ceoDirectiveInput" type="text" placeholder="Instruct CEO: e.g. 'Delegate task: Audit DB connections to Nova [HIGH]' or 'Generate status report'..." class="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white" onkeydown="if(event.key === 'Enter') submitCeoDirective()">
+          <button onclick="submitCeoDirective()" id="btnSendCeoDirective" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-lg text-xs shadow-xs transition flex items-center space-x-1.5 shrink-0">
+            <span>Send Directive</span>
+            <span>&rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: KANBAN BOARD (Pure Database Records) -->
+    <div id="viewKanban" class="hidden space-y-4">
       <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
         
         <!-- Backlog / Todo -->
@@ -617,7 +696,47 @@ def get_dashboard_html() -> str:
       </div>
     </div>
 
-    <!-- TAB 2: BOARD OF ADVISORS (Pure Database Records) -->
+    <!-- TAB 3: TEAM HIERARCHY & ORG CHART -->
+    <div id="viewHierarchy" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Organizational Hierarchy & Squad Allocation</h2>
+          <p class="text-xs text-slate-500">Live operational tree showing Executive Leadership, Strategic Advisory Council, Teams, and Member Agents.</p>
+        </div>
+        <button onclick="fetchTeamHierarchy()" class="text-xs bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-3 py-1.5 rounded-lg transition flex items-center space-x-1.5 shadow-xs">
+          <span>🔄</span>
+          <span>Refresh Org Chart</span>
+        </button>
+      </div>
+
+      <div id="hierarchyTreeContainer" class="space-y-6">
+        <div class="p-8 text-center text-slate-400 text-xs italic bg-white border border-slate-200 rounded-xl">
+          Loading organizational hierarchy...
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: AGENT ROSTER & DIRECT DIALOGUE -->
+    <div id="viewAgents" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Agent Pool & Direct 1-on-1 Dialogue</h2>
+          <p class="text-xs text-slate-500">All registered agents in your organization. Click "Chat with Agent" to converse directly with any specialist.</p>
+        </div>
+        <button onclick="fetchAgentRoster()" class="text-xs bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-3 py-1.5 rounded-lg transition flex items-center space-x-1.5 shadow-xs">
+          <span>🔄</span>
+          <span>Refresh Agents</span>
+        </button>
+      </div>
+
+      <div id="agentRosterList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="col-span-3 p-8 text-center text-slate-400 text-xs italic bg-white border border-slate-200 rounded-xl">
+          Loading agent roster...
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: BOARD OF ADVISORS (Pure Database Records) -->
     <div id="viewAdvisors" class="hidden space-y-6">
       <div class="flex items-center justify-between">
         <div>
@@ -782,6 +901,91 @@ def get_dashboard_html() -> str:
     </div>
   </div>
 
+  <!-- MODAL: Direct Agent 1-on-1 Dialogue -->
+  <div id="agentChatModal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl max-w-xl w-full flex flex-col h-[580px] shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-base shadow-xs">
+            🤖
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 id="modalAgentChatName" class="text-sm font-bold text-slate-900">Agent Name</h3>
+              <span id="modalAgentChatStatus" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold">IDLE</span>
+            </div>
+            <p id="modalAgentChatRole" class="text-xs text-slate-500">Agent Role</p>
+          </div>
+        </div>
+        <button onclick="closeAgentChatModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
+      </div>
+
+      <!-- Agent Tasks Summary Strip -->
+      <div id="modalAgentTasksStrip" class="px-4 py-2 bg-slate-100/70 border-b border-slate-200 text-[11px] text-slate-600 flex items-center justify-between">
+        <span>Assigned Tasks: <strong id="modalAgentTasksCount" class="text-slate-900 font-mono">0</strong></span>
+        <span id="modalAgentModelBadge" class="font-mono text-[10px] text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded font-medium">model</span>
+      </div>
+
+      <!-- Messages Body -->
+      <div id="agentChatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 custom-scroll bg-slate-50/30">
+        <div class="text-center text-slate-400 text-xs py-8 italic">No previous messages with this agent.</div>
+      </div>
+
+      <!-- Input Bar -->
+      <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+        <input id="agentChatMessageInput" type="text" placeholder="Type direct directive or inquiry..." class="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white" onkeydown="if(event.key === 'Enter') submitAgentChatMessage()">
+        <button onclick="submitAgentChatMessage()" id="btnSendAgentMessage" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-xs transition">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Delegate Task via CEO -->
+  <div id="delegateTaskModal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-indigo-200 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-lg">🎯</span>
+          <h3 class="text-sm font-bold text-slate-900">Delegate Task to Agent / Team</h3>
+        </div>
+        <button onclick="closeDelegateModal()" class="text-slate-400 hover:text-slate-700 text-lg leading-none">&times;</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Task Title</label>
+          <input id="delegateModalTitle" type="text" placeholder="e.g. Audit DB lock heartbeats and TTL expiry" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-indigo-500 focus:bg-white">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Assignee Agent</label>
+          <select id="delegateModalAgentSelect" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-indigo-500"></select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Priority</label>
+            <select id="delegateModalPriority" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-indigo-500">
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH" selected>HIGH</option>
+              <option value="URGENT">URGENT</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Delegation Authority</label>
+            <input type="text" value="CEO Executive Office" disabled class="w-full bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-slate-500 font-mono text-[11px]">
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Execution Directives & Requirements</label>
+          <textarea id="delegateModalDesc" rows="3" placeholder="Specify acceptance criteria, tool limits, and invariants..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-indigo-500 focus:bg-white"></textarea>
+        </div>
+      </div>
+      <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-200">
+        <button onclick="closeDelegateModal()" class="px-3.5 py-1.5 text-xs text-slate-600 hover:text-slate-900">Cancel</button>
+        <button onclick="submitDelegatedTask()" id="btnSubmitDelegateTask" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition">Submit Directive to CEO</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let autoscroll = true;
     let ws = null;
@@ -840,7 +1044,12 @@ def get_dashboard_html() -> str:
         }
       }
 
+      switchTab('ceo');
+      fetchCeoInfo();
+      fetchCeoHistory();
       refreshActualData();
+      fetchTeamHierarchy();
+      fetchAgentRoster();
       fetchAdvisors();
     }
 
@@ -994,12 +1203,12 @@ def get_dashboard_html() -> str:
       const agentBudget = isNaN(budgetVal) ? 100.0 : budgetVal;
 
       const advName = (document.getElementById('obAdvName')?.value || '').trim() || 'Dr. Aris Thorne';
-      const advDomain = document.getElementById('obAdvDomain')?.value || 'DISTRIBUTED_SYSTEMS';
+      const advDomain = (document.getElementById('obAdvDomain')?.value || '').trim() || 'Distributed Systems & Resilience';
       const advDocTitle = (document.getElementById('obAdvDocTitle')?.value || '').trim() || 'Lock Invariants and Sweeper Policies';
       const advDocContent = (document.getElementById('obAdvDocContent')?.value || '').trim() || 'Kanban holds primary lock. Daemons must emit 15s heartbeats. Expired locks after 60s MUST reap to DLQ.';
 
-      const taskTitle = (document.getElementById('obTaskTitle')?.value || '').trim() || 'Establish Host Daemon WebSocket Handshake & Telemetry';
-      const taskDesc = (document.getElementById('obTaskDesc')?.value || '').trim() || 'Connect execution daemon to /ws/daemon/{daemon_id}, stream stdout, and verify 15s heartbeats.';
+      const taskTitle = (document.getElementById('obTaskTitle')?.value || '').trim() || 'Confirm system readiness, tool availability, and knowledge base access';
+      const taskDesc = (document.getElementById('obTaskDesc')?.value || '').trim() || 'Verify that the execution daemon, LLM provider, available tools, and domain knowledge bases are fully accessible and operating correctly.';
       const taskPriority = document.getElementById('obTaskPriority')?.value || 'HIGH';
 
       const payload = {
@@ -1081,23 +1290,40 @@ def get_dashboard_html() -> str:
       }
     }
 
+    let activeChatAgentId = null;
+    let cachedAgents = [];
+
     // 3. Tab Navigation
     function switchTab(tabId) {
-      ['kanban', 'advisors', 'copilot', 'telemetry'].forEach(t => {
+      const allTabs = ['ceo', 'kanban', 'hierarchy', 'agents', 'advisors', 'copilot', 'telemetry'];
+      allTabs.forEach(t => {
         const view = document.getElementById('view' + t.charAt(0).toUpperCase() + t.slice(1));
         const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-        if (t === tabId) {
-          view.classList.remove('hidden');
-          btn.className = 'tab-btn px-4 py-2.5 text-xs font-bold text-emerald-700 border-b-2 border-emerald-600 transition flex items-center space-x-2';
-        } else {
-          view.classList.add('hidden');
-          btn.className = 'tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2';
+        if (view && btn) {
+          if (t === tabId) {
+            view.classList.remove('hidden');
+            btn.className = 'tab-btn px-4 py-2.5 text-xs font-bold text-emerald-700 border-b-2 border-emerald-600 transition flex items-center space-x-2 shrink-0';
+          } else {
+            view.classList.add('hidden');
+            btn.className = 'tab-btn px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center space-x-2 shrink-0';
+          }
         }
       });
-      if (tabId === 'advisors') fetchAdvisors();
+      if (tabId === 'ceo') {
+        fetchCeoInfo();
+        fetchCeoHistory();
+      } else if (tabId === 'kanban') {
+        refreshActualData();
+      } else if (tabId === 'hierarchy') {
+        fetchTeamHierarchy();
+      } else if (tabId === 'agents') {
+        fetchAgentRoster();
+      } else if (tabId === 'advisors') {
+        fetchAdvisors();
+      }
     }
 
-    // 4. Modals
+    // 4. Modals Management
     function openNewTaskModal() { document.getElementById('newTaskModal').classList.remove('hidden'); }
     function closeNewTaskModal() { document.getElementById('newTaskModal').classList.add('hidden'); }
     function openAdvisoryModal() { 
@@ -1106,6 +1332,543 @@ def get_dashboard_html() -> str:
       sel.innerHTML = cachedAdvisors.map(a => `<option value="${a.id}">${a.name} (${a.domain} - ${a.reasoning_model})</option>`).join('');
     }
     function closeAdvisoryModal() { document.getElementById('advisoryModal').classList.add('hidden'); }
+
+    // CEO Executive Office Functions
+    async function fetchCeoInfo() {
+      try {
+        const res = await fetch('/api/v1/teams/hierarchy');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ceo) {
+            document.getElementById('ceoHeaderName').innerText = data.ceo.name || 'Lead Orchestrator';
+            document.getElementById('ceoHeaderRole').innerText = data.ceo.role || 'Chief Executive Agent';
+            document.getElementById('ceoHeaderStatus').innerText = data.ceo.status || 'IDLE';
+            document.getElementById('ceoHeaderModel').innerText = `Model: ${data.ceo.model_name || 'custom'}`;
+            document.getElementById('ceoHeaderBudget').innerText = `Budget: $${(data.ceo.monthly_budget_usd || 0).toFixed(0)}`;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load CEO info:', err);
+      }
+    }
+
+    async function fetchCeoHistory() {
+      const container = document.getElementById('ceoChatHistory');
+      try {
+        const res = await fetch('/api/v1/ceo/history');
+        if (res.ok) {
+          const messages = await res.json();
+          if (messages.length === 0) {
+            container.innerHTML = `
+              <div class="p-8 text-center text-slate-400 text-xs">
+                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2 text-xl">👑</div>
+                <div class="font-bold text-slate-700 mb-1">Executive Channel Connected</div>
+                <p class="max-w-md mx-auto text-slate-500">Instruct your CEO to delegate tasks to virtual squads, request live executive status reports, or reallocate priorities.</p>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = '';
+          messages.forEach(m => {
+            appendCeoMessageBubble(m.sender_type, m.message, m.metadata, m.created_at);
+          });
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Failed to load CEO history:', err);
+      }
+    }
+
+    function appendCeoMessageBubble(senderType, message, metadata, createdAt) {
+      const container = document.getElementById('ceoChatHistory');
+      const isUser = senderType === 'USER';
+      const timeStr = createdAt ? new Date(createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const row = document.createElement('div');
+      row.className = isUser ? 'flex justify-end' : 'flex justify-start';
+
+      let inner = '';
+      if (isUser) {
+        inner = `
+          <div class="max-w-2xl bg-emerald-600 text-white rounded-2xl rounded-tr-xs px-4 py-3 text-xs shadow-xs space-y-1">
+            <div class="font-bold text-[10px] text-emerald-200 uppercase tracking-wider flex items-center justify-between gap-4">
+              <span>Owner Directive</span>
+              <span class="font-normal font-mono text-[9px] text-emerald-100">${timeStr}</span>
+            </div>
+            <div class="whitespace-pre-wrap leading-relaxed">${escapeHtml(message)}</div>
+          </div>
+        `;
+      } else {
+        let actionsHtml = '';
+        if (metadata && metadata.actions_taken && metadata.actions_taken.length > 0) {
+          actionsHtml = `
+            <div class="mt-2 pt-2 border-t border-slate-200/80 space-y-1">
+              <span class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider block">Delegations & Actions Executed:</span>
+              ${metadata.actions_taken.map(a => `
+                <div class="bg-indigo-50/80 border border-indigo-200 rounded px-2.5 py-1 text-[11px] text-indigo-900 flex items-center justify-between">
+                  <span>${escapeHtml(a.title || a.action || 'Task')}</span>
+                  <span class="font-mono text-[9px] bg-indigo-200 px-1.5 py-0.5 rounded font-semibold text-indigo-800">${escapeHtml(a.assigned_agent_name || 'Assigned')}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        let reportHtml = '';
+        if (metadata && metadata.report_data) {
+          const r = metadata.report_data;
+          reportHtml = `
+            <div class="mt-2.5 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
+              <div class="bg-white p-2 rounded border border-slate-100">
+                <div class="text-[9px] text-slate-500 uppercase font-semibold">Total Tasks</div>
+                <div class="font-bold text-slate-900 font-mono text-base">${r.tasks_count?.total ?? '-'}</div>
+              </div>
+              <div class="bg-white p-2 rounded border border-slate-100">
+                <div class="text-[9px] text-blue-600 uppercase font-semibold">In Progress</div>
+                <div class="font-bold text-blue-700 font-mono text-base">${r.tasks_count?.in_progress ?? '-'}</div>
+              </div>
+              <div class="bg-white p-2 rounded border border-slate-100">
+                <div class="text-[9px] text-amber-600 uppercase font-semibold">Paused Consult</div>
+                <div class="font-bold text-amber-700 font-mono text-base">${r.tasks_count?.paused_for_consultation ?? '-'}</div>
+              </div>
+              <div class="bg-white p-2 rounded border border-slate-100">
+                <div class="text-[9px] text-red-600 uppercase font-semibold">DLQ Reaped</div>
+                <div class="font-bold text-red-700 font-mono text-base">${r.tasks_count?.dlq ?? '-'}</div>
+              </div>
+            </div>
+          `;
+        }
+
+        inner = `
+          <div class="max-w-3xl bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-xs p-4 text-xs shadow-xs space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-sm">👑</span>
+                <span class="font-bold text-slate-900">Lead Orchestrator (CEO)</span>
+                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">${metadata?.intent || 'DIRECTIVE'}</span>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono">${timeStr}</span>
+            </div>
+            <div class="whitespace-pre-wrap leading-relaxed">${escapeHtml(message)}</div>
+            ${actionsHtml}
+            ${reportHtml}
+          </div>
+        `;
+      }
+
+      row.innerHTML = inner;
+      container.appendChild(row);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function submitCeoDirective(customText = null) {
+      const inputEl = document.getElementById('ceoDirectiveInput');
+      const text = customText || inputEl.value.trim();
+      if (!text) return;
+
+      const btn = document.getElementById('btnSendCeoDirective');
+      btn.innerText = 'Dispatching...';
+      btn.disabled = true;
+
+      // Optimistically append user message
+      appendCeoMessageBubble('USER', text, null, new Date().toISOString());
+      if (!customText) inputEl.value = '';
+
+      try {
+        const res = await fetch('/api/v1/ceo/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          appendCeoMessageBubble('CEO', data.response, {
+            intent: data.intent,
+            actions_taken: data.actions_taken,
+            report_data: data.report_data
+          }, new Date().toISOString());
+
+          if (data.actions_taken && data.actions_taken.length > 0) {
+            refreshActualData();
+            fetchTeamHierarchy();
+            logToTerminal(`[CEO_DELEGATION] CEO executed ${data.actions_taken.length} delegation directives.`, 'emerald');
+          }
+        } else {
+          const err = await res.json();
+          appendCeoMessageBubble('CEO', `Directive could not be processed: ${err.detail || 'Unknown error'}`, { intent: 'ERROR' });
+        }
+      } catch (err) {
+        appendCeoMessageBubble('CEO', `Network error contacting CEO: ${err.message || err}`, { intent: 'ERROR' });
+      } finally {
+        btn.innerHTML = '<span>Send Directive</span><span>&rarr;</span>';
+        btn.disabled = false;
+      }
+    }
+
+    function sendCeoQuickPrompt(promptText) {
+      submitCeoDirective(promptText);
+    }
+
+    function requestCeoReport() {
+      sendCeoQuickPrompt('Generate a comprehensive executive status report covering tasks, team workloads, lock health, and any dead-letter queue items.');
+    }
+
+    // Team Hierarchy & Org Chart Functions
+    async function fetchTeamHierarchy() {
+      const container = document.getElementById('hierarchyTreeContainer');
+      try {
+        const res = await fetch('/api/v1/teams/hierarchy');
+        if (res.ok) {
+          const h = await res.json();
+          renderTeamHierarchy(h);
+        }
+      } catch (err) {
+        console.error('Failed to load team hierarchy:', err);
+      }
+    }
+
+    function renderTeamHierarchy(h) {
+      const container = document.getElementById('hierarchyTreeContainer');
+      
+      const ceoHtml = h.ceo ? `
+        <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-xl p-5 border border-slate-700 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-2xl shrink-0">👑</div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold uppercase tracking-wider">Apex Executive</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold">${h.ceo.status}</span>
+              </div>
+              <h3 class="text-base font-black text-white mt-1">${escapeHtml(h.ceo.name)}</h3>
+              <p class="text-xs text-slate-300">${escapeHtml(h.ceo.role)} &bull; <span class="font-mono text-indigo-300">${h.ceo.model_name || 'custom'}</span> &bull; Budget: $${(h.ceo.monthly_budget_usd || 0).toFixed(0)}</p>
+            </div>
+          </div>
+          <button onclick="switchTab('ceo')" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-lg transition shadow-xs flex items-center space-x-1.5">
+            <span>💬</span>
+            <span>Enter Executive Office</span>
+          </button>
+        </div>
+      ` : `<div class="p-4 bg-white border border-slate-200 rounded-xl text-center text-xs text-slate-400 italic">No Lead Orchestrator appointed yet.</div>`;
+
+      const advisorsHtml = (h.advisors && h.advisors.length > 0) ? `
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2 text-xs font-bold text-purple-900 uppercase tracking-wider">
+            <span>🧠</span>
+            <span>Board of Strategic Advisors (Deep Reasoning Council)</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            ${h.advisors.map(a => `
+              <div class="bg-white border border-purple-200 rounded-xl p-4 shadow-xs space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-slate-900 text-xs">${escapeHtml(a.name)}</span>
+                  <span class="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">${escapeHtml(a.domain)}</span>
+                </div>
+                <div class="text-[11px] text-slate-500 font-mono">Model: ${escapeHtml(a.reasoning_model)}</div>
+                <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <span class="text-[10px] text-slate-400">Status: <strong class="text-emerald-700">${a.status}</strong></span>
+                  <button onclick="promptConsultAdvisor('${a.id}', '${escapeHtml(a.name)}')" class="text-[10px] font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 px-2 py-1 rounded border border-purple-200">Consult</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      const teamsHtml = (h.teams && h.teams.length > 0) ? `
+        <div class="space-y-4">
+          <div class="flex items-center space-x-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <span>🏢</span>
+            <span>Operational Teams & Virtual Squads</span>
+          </div>
+          ${h.teams.map(t => `
+            <div class="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+              <div class="p-4 bg-slate-50/70 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <div class="flex items-center space-x-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center font-bold text-sm">
+                    S
+                  </div>
+                  <div>
+                    <div class="flex items-center space-x-2">
+                      <h4 class="font-bold text-slate-900 text-sm">${escapeHtml(t.name)}</h4>
+                      <span class="text-[10px] font-mono bg-slate-200 text-slate-700 px-2 py-0.5 rounded">${escapeHtml(t.project_tag)}</span>
+                    </div>
+                    <p class="text-xs text-slate-500">Lead: ${t.lead_agent ? escapeHtml(t.lead_agent.name) : 'None'}</p>
+                  </div>
+                </div>
+                <span class="text-xs font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-md">
+                  Active Tasks: ${t.tasks_count}
+                </span>
+              </div>
+
+              <div class="p-4">
+                <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">Assigned Squad Members (${t.members.length})</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  ${t.members.map(m => `
+                    <div class="bg-slate-50/70 border border-slate-200 rounded-lg p-3 space-y-2 text-xs">
+                      <div class="flex items-center justify-between">
+                        <div class="font-bold text-slate-900 flex items-center space-x-1.5">
+                          <span>🤖</span>
+                          <span>${escapeHtml(m.name)}</span>
+                        </div>
+                        <span class="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded ${m.status === 'BUSY' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}">${m.status}</span>
+                      </div>
+                      <div class="text-[11px] text-slate-600">${escapeHtml(m.role)} &bull; <span class="font-mono text-indigo-700 text-[10px]">${m.model_name || 'custom'}</span></div>
+                      <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-500">Tasks: <strong class="text-slate-900">${m.assigned_tasks_count}</strong></span>
+                        <button onclick="openAgentChatModal('${m.id}')" class="text-[10px] bg-white hover:bg-slate-100 text-slate-800 font-semibold px-2 py-1 rounded border border-slate-300 shadow-2xs transition flex items-center space-x-1">
+                          <span>💬</span>
+                          <span>Talk</span>
+                        </button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : `<div class="p-8 bg-white border border-slate-200 rounded-xl text-center text-xs text-slate-400 italic">No operational squads compiled in database yet.</div>`;
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          ${ceoHtml}
+          ${advisorsHtml}
+          ${teamsHtml}
+        </div>
+      `;
+    }
+
+    // Agent Roster & 1-on-1 Dialogue Functions
+    async function fetchAgentRoster() {
+      const container = document.getElementById('agentRosterList');
+      try {
+        const res = await fetch('/api/v1/agents');
+        if (res.ok) {
+          cachedAgents = await res.json();
+          renderAgentRoster(cachedAgents);
+          populateDelegateModalAgents(cachedAgents);
+        }
+      } catch (err) {
+        console.error('Failed to load agents:', err);
+      }
+    }
+
+    function renderAgentRoster(agents) {
+      const container = document.getElementById('agentRosterList');
+      if (agents.length === 0) {
+        container.innerHTML = '<div class="col-span-3 text-center text-slate-400 py-10 text-xs italic">No agents registered in database. Use Setup Wizard to initialize.</div>';
+        return;
+      }
+
+      container.innerHTML = agents.map(a => `
+        <div class="bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 shadow-xs space-y-3 transition text-xs">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center font-bold text-base shadow-2xs">
+                🤖
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900">${escapeHtml(a.name)}</h3>
+                <span class="text-[10px] text-slate-500">${escapeHtml(a.role)}</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded ${a.status === 'BUSY' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}">${a.status}</span>
+          </div>
+
+          <p class="text-[11px] text-slate-600 line-clamp-2 leading-relaxed italic">"${escapeHtml(a.backstory || 'Ready for task assignments.')}"</p>
+
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+            <span>Harness: <strong class="text-slate-800 font-sans">${a.adapter_type}</strong></span>
+            <span>Budget: <strong class="text-slate-800">$${(a.monthly_budget_usd || 0).toFixed(0)}</strong></span>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[10px] font-mono text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">${escapeHtml(a.model_name || 'custom-model')}</span>
+            <button onclick="openAgentChatModal('${a.id}')" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg shadow-2xs transition flex items-center space-x-1.5">
+              <span>💬</span>
+              <span>Chat with Agent</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function populateDelegateModalAgents(agents) {
+      const sel = document.getElementById('delegateModalAgentSelect');
+      if (sel) {
+        sel.innerHTML = agents.map(a => `<option value="${a.id}" data-name="${escapeHtml(a.name)}">${escapeHtml(a.name)} (${escapeHtml(a.role)}) - ${a.status}</option>`).join('');
+      }
+    }
+
+    // 1-on-1 Agent Chat Modal Handlers
+    async function openAgentChatModal(agentId) {
+      activeChatAgentId = agentId;
+      document.getElementById('agentChatModal').classList.remove('hidden');
+
+      try {
+        const [agentRes, msgRes] = await Promise.all([
+          fetch(`/api/v1/agents/${agentId}`),
+          fetch(`/api/v1/agents/${agentId}/messages`)
+        ]);
+
+        if (agentRes.ok) {
+          const ag = await agentRes.json();
+          document.getElementById('modalAgentChatName').innerText = ag.name;
+          document.getElementById('modalAgentChatRole').innerText = ag.role;
+          document.getElementById('modalAgentChatStatus').innerText = ag.status;
+          document.getElementById('modalAgentModelBadge').innerText = ag.model_name || 'default-model';
+        }
+
+        if (msgRes.ok) {
+          const messages = await msgRes.json();
+          renderAgentChatMessages(messages);
+        }
+      } catch (err) {
+        console.error('Failed to open agent chat:', err);
+      }
+    }
+
+    function closeAgentChatModal() {
+      document.getElementById('agentChatModal').classList.add('hidden');
+      activeChatAgentId = null;
+    }
+
+    function renderAgentChatMessages(messages) {
+      const container = document.getElementById('agentChatMessages');
+      if (messages.length === 0) {
+        container.innerHTML = '<div class="text-center text-slate-400 text-xs py-10 italic">No previous messages with this agent. Type a directive below to start direct communication.</div>';
+        return;
+      }
+
+      container.innerHTML = messages.map(m => {
+        const isUser = m.sender_type === 'USER';
+        return `
+          <div class="flex ${isUser ? 'justify-end' : 'justify-start'}">
+            <div class="max-w-md ${isUser ? 'bg-emerald-600 text-white rounded-2xl rounded-tr-xs' : 'bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-xs'} px-3.5 py-2.5 text-xs shadow-2xs leading-relaxed">
+              <div class="text-[9px] font-bold ${isUser ? 'text-emerald-200' : 'text-slate-400'} uppercase mb-1">
+                ${isUser ? 'You (Owner)' : 'Agent'} &bull; ${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </div>
+              <div class="whitespace-pre-wrap">${escapeHtml(m.message)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function submitAgentChatMessage() {
+      if (!activeChatAgentId) return;
+      const inp = document.getElementById('agentChatMessageInput');
+      const text = inp.value.trim();
+      if (!text) return;
+
+      const btn = document.getElementById('btnSendAgentMessage');
+      btn.innerText = 'Sending...';
+      btn.disabled = true;
+
+      // Optimistic append
+      const container = document.getElementById('agentChatMessages');
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex justify-end';
+      userBubble.innerHTML = `
+        <div class="max-w-md bg-emerald-600 text-white rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs shadow-2xs leading-relaxed">
+          <div class="text-[9px] font-bold text-emerald-200 uppercase mb-1">You (Owner) &bull; ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+          <div class="whitespace-pre-wrap">${escapeHtml(text)}</div>
+        </div>
+      `;
+      container.appendChild(userBubble);
+      container.scrollTop = container.scrollHeight;
+      inp.value = '';
+
+      try {
+        const res = await fetch(`/api/v1/agents/${activeChatAgentId}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const replyBubble = document.createElement('div');
+          replyBubble.className = 'flex justify-start';
+          replyBubble.innerHTML = `
+            <div class="max-w-md bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-xs px-3.5 py-2.5 text-xs shadow-2xs leading-relaxed">
+              <div class="text-[9px] font-bold text-slate-400 uppercase mb-1">${escapeHtml(data.agent_name)} &bull; ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+              <div class="whitespace-pre-wrap">${escapeHtml(data.response)}</div>
+            </div>
+          `;
+          container.appendChild(replyBubble);
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Agent chat error:', err);
+      } finally {
+        btn.innerText = 'Send';
+        btn.disabled = false;
+      }
+    }
+
+    // Task Delegation Modal Handlers
+    function openDelegateModal() {
+      document.getElementById('delegateTaskModal').classList.remove('hidden');
+      if (cachedAgents.length === 0) {
+        fetchAgentRoster();
+      }
+    }
+
+    function closeDelegateModal() {
+      document.getElementById('delegateTaskModal').classList.add('hidden');
+    }
+
+    async function submitDelegatedTask() {
+      const title = document.getElementById('delegateModalTitle').value.trim();
+      const sel = document.getElementById('delegateModalAgentSelect');
+      const targetAgentName = sel.options[sel.selectedIndex]?.getAttribute('data-name') || 'Nova';
+      const priority = document.getElementById('delegateModalPriority').value;
+      const desc = document.getElementById('delegateModalDesc').value.trim();
+
+      if (!title) {
+        alert('Please specify a task title to delegate.');
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitDelegateTask');
+      btn.innerText = 'Dispatching Directive...';
+      btn.disabled = true;
+
+      const directive = `Delegate task: "${title}" to Agent ${targetAgentName} [${priority}]: ${desc || 'Execute with full tool authority and log telemetry.'}`;
+
+      try {
+        const res = await fetch('/api/v1/ceo/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: directive })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          closeDelegateModal();
+          switchTab('ceo');
+          appendCeoMessageBubble('CEO', data.response, {
+            intent: data.intent,
+            actions_taken: data.actions_taken,
+            report_data: data.report_data
+          }, new Date().toISOString());
+          refreshActualData();
+          fetchTeamHierarchy();
+          logToTerminal(`[CEO_DELEGATION] Task '${title}' delegated to ${targetAgentName} [${priority}].`, 'emerald');
+        } else {
+          alert('Failed to submit delegation directive.');
+        }
+      } catch (err) {
+        console.error('Delegation error:', err);
+      } finally {
+        btn.innerText = 'Submit Directive to CEO';
+        btn.disabled = false;
+      }
+    }
 
     // 5. Real Database Data Rendering (Zero Dummy Data)
     async function refreshActualData() {
