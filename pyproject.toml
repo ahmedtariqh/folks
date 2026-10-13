@@ -1,0 +1,22 @@
+[project]
+name = "folks-orchestrator"
+version = "1.0.0"
+description = "Multi-agent orchestration platform integrating Kanban workflows with isolated execution daemons, dynamic multi-team compilation, and an Owner Copilot."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Folks Team" }
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["apps/server/tests", "packages/daemon/tests"]
+pythonpath = [".", "apps/server", "packages"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
