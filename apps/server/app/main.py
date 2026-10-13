@@ -14,6 +14,7 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 from app.core.config import settings
 from app.db.session import init_db
@@ -26,7 +27,9 @@ from app.api.v1.war_rooms import router as war_rooms_router
 from app.api.v1.copilot import router as copilot_router
 from app.api.v1.review_gates import router as review_gates_router
 from app.api.v1.advisors import router as advisors_router
+from app.api.v1.system import router as system_router
 from app.api.websockets import router as ws_router
+from app.templates.dashboard import get_dashboard_html
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("folks.main")
@@ -71,7 +74,14 @@ app.include_router(war_rooms_router, prefix=settings.API_V1_STR)
 app.include_router(copilot_router, prefix=settings.API_V1_STR)
 app.include_router(review_gates_router, prefix=settings.API_V1_STR)
 app.include_router(advisors_router, prefix=settings.API_V1_STR)
+app.include_router(system_router, prefix=settings.API_V1_STR)
 app.include_router(ws_router)
+
+@app.get("/", response_class=HTMLResponse, tags=["Web Dashboard"])
+@app.get("/dashboard", response_class=HTMLResponse, tags=["Web Dashboard"])
+async def server_dashboard():
+    """Interactive Server Dashboard for the Folks Multi-Agent Orchestrator."""
+    return HTMLResponse(content=get_dashboard_html())
 
 @app.get("/health")
 async def health_check():
@@ -80,3 +90,4 @@ async def health_check():
         "service": settings.PROJECT_NAME,
         "version": settings.VERSION
     }
+

@@ -9,10 +9,29 @@ async def test_full_platform_api_workflow():
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        # 1. Health check
+        # 1. Health check & Server Dashboard
         res_health = await client.get("/health")
         assert res_health.status_code == 200
         assert res_health.json()["status"] == "healthy"
+
+        res_dash = await client.get("/")
+        assert res_dash.status_code == 200
+        assert "FOLKS" in res_dash.text
+        assert "Kanban Board" in res_dash.text
+
+        res_dash2 = await client.get("/dashboard")
+        assert res_dash2.status_code == 200
+
+        # Verify system overview endpoint
+        res_overview = await client.get("/api/v1/system/overview")
+        assert res_overview.status_code == 200
+        assert res_overview.json()["status"] == "HEALTHY"
+        assert res_overview.json()["sweeper"]["status"] == "ACTIVE"
+
+        # Verify system demo seed endpoint
+        res_seed = await client.post("/api/v1/system/seed")
+        assert res_seed.status_code == 200
+        assert res_seed.json()["status"] == "success"
 
         # 2. Create Agents in Pool
         res_ag1 = await client.post("/api/v1/agents", json={
