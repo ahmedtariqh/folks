@@ -8,6 +8,7 @@ from .audit import AuditLog
 from .knowledge_base import KnowledgeBase
 from .advisor import Advisor, AdvisorKnowledgeLink
 from .advisory_session import AdvisorySession
+from .system_config import LLMProviderConfig, SystemSetting
 
 __all__ = [
     "Base",
@@ -25,4 +26,7 @@ __all__ = [
     "Advisor",
     "AdvisorKnowledgeLink",
     "AdvisorySession",
+    "LLMProviderConfig",
+    "SystemSetting",
 ]
+

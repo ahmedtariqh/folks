@@ -28,8 +28,10 @@ from app.api.v1.copilot import router as copilot_router
 from app.api.v1.review_gates import router as review_gates_router
 from app.api.v1.advisors import router as advisors_router
 from app.api.v1.system import router as system_router
+from app.api.v1.onboarding import router as onboarding_router
 from app.api.websockets import router as ws_router
 from app.templates.dashboard import get_dashboard_html
+
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("folks.main")
@@ -75,7 +77,9 @@ app.include_router(copilot_router, prefix=settings.API_V1_STR)
 app.include_router(review_gates_router, prefix=settings.API_V1_STR)
 app.include_router(advisors_router, prefix=settings.API_V1_STR)
 app.include_router(system_router, prefix=settings.API_V1_STR)
+app.include_router(onboarding_router, prefix=settings.API_V1_STR)
 app.include_router(ws_router)
+
 
 @app.get("/", response_class=HTMLResponse, tags=["Web Dashboard"])
 @app.get("/dashboard", response_class=HTMLResponse, tags=["Web Dashboard"])

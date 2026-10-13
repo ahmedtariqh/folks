@@ -76,7 +76,7 @@ async def get_system_overview(db: AsyncSession = Depends(get_db)) -> Dict[str, A
 async def seed_demo_data(db: AsyncSession = Depends(get_db)):
     """Seed sample team, agents, advisory board, and Kanban tasks for immediate interactive demo."""
     # Check if team already exists
-    existing_team = (await db.execute(select(Team).where(Team.project_tag == "folks_core"))).scalar_one_or_none()
+    existing_team = (await db.execute(select(Team).where(Team.project_tag == "folks_core"))).scalars().first()
     
     if not existing_team:
         team = Team(name="Core Platform Engineering", project_tag="folks_core")
@@ -138,7 +138,7 @@ async def seed_demo_data(db: AsyncSession = Depends(get_db)):
     await db.flush()
 
     # Create Knowledge Bases & Board of Advisors
-    existing_kb = (await db.execute(select(KnowledgeBase).where(KnowledgeBase.domain_tag == "distributed_systems"))).scalar_one_or_none()
+    existing_kb = (await db.execute(select(KnowledgeBase).where(KnowledgeBase.domain_tag == "distributed_systems"))).scalars().first()
     if not existing_kb:
         kb_dist = KnowledgeBase(
             name="Distributed Consensus & Lock Lease Invariants",
@@ -169,7 +169,8 @@ async def seed_demo_data(db: AsyncSession = Depends(get_db)):
         await db.flush()
         db.add(AdvisorKnowledgeLink(advisor_id=advisor_dist.id, knowledge_base_id=kb_dist.id))
 
-    existing_sec_kb = (await db.execute(select(KnowledgeBase).where(KnowledgeBase.domain_tag == "zero_trust_security"))).scalar_one_or_none()
+    existing_sec_kb = (await db.execute(select(KnowledgeBase).where(KnowledgeBase.domain_tag == "zero_trust_security"))).scalars().first()
+
     if not existing_sec_kb:
         kb_sec = KnowledgeBase(
             name="Zero-Trust Boundary Specifications",

@@ -1,7 +1,8 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey
+from sqlalchemy import String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import Optional
 from .base import Base, utc_now
 
 class Team(Base):
@@ -9,10 +10,12 @@ class Team(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    mission: Mapped[Optional[str]] = mapped_column(Text, nullable=True, default="") # Company / Team Core Mission
     project_tag: Mapped[str] = mapped_column(String(100), nullable=False) # Bound project scope
     lead_agent_id: Mapped[str] = mapped_column(String(36), ForeignKey("agents.id", ondelete="SET NULL"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
+
 
     # Relationships
     lead_agent = relationship("Agent", foreign_keys=[lead_agent_id])

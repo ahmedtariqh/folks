@@ -30,6 +30,13 @@ AsyncSessionLocal = async_sessionmaker(
 async def init_db() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # SQLite safe auto-migration for newly added columns
+        try:
+            from sqlalchemy import text
+            await conn.execute(text("ALTER TABLE teams ADD COLUMN mission TEXT;"))
+        except Exception:
+            pass
+
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
