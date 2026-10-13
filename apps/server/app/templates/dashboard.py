@@ -976,39 +976,65 @@ def get_dashboard_html() -> str:
       btn.innerText = 'Saving to Database...';
       btn.disabled = true;
 
+      const orgName = (document.getElementById('obOrgName')?.value || '').trim() || 'Apex Autonomous Labs';
+      const orgMission = (document.getElementById('obOrgMission')?.value || '').trim() || 'Build high-reliability autonomous engineering squads with strict lock handoffs.';
+      const orgTag = (document.getElementById('obOrgTag')?.value || '').trim().replace(/\\s+/g, '_') || 'apex_core';
+
+      const llmName = (document.getElementById('obLlmName')?.value || '').trim() || 'Custom LLM Gateway';
+      const baseUrl = (document.getElementById('obLlmBaseUrl')?.value || '').trim() || null;
+      const apiKey = (document.getElementById('obLlmApiKey')?.value || '').trim() || null;
+      const defModel = (document.getElementById('obLlmDefaultModel')?.value || '').trim() || 'claude-3-7-sonnet';
+      const advModel = (document.getElementById('obLlmAdvisorModel')?.value || '').trim() || 'claude-3-7-sonnet-thought';
+
+      const agentName = (document.getElementById('obAgentName')?.value || '').trim() || 'Nova - Lead Orchestrator';
+      const agentRole = (document.getElementById('obAgentRole')?.value || '').trim() || 'Chief Executive Agent';
+      const agentBackstory = (document.getElementById('obAgentBackstory')?.value || '').trim() || 'Architect and executive lead. Coordinates ticket checkouts and state machine transitions.';
+      const agentAdapter = document.getElementById('obAgentAdapter')?.value || 'host_cli';
+      const budgetVal = parseFloat(document.getElementById('obAgentBudget')?.value);
+      const agentBudget = isNaN(budgetVal) ? 100.0 : budgetVal;
+
+      const advName = (document.getElementById('obAdvName')?.value || '').trim() || 'Dr. Aris Thorne';
+      const advDomain = document.getElementById('obAdvDomain')?.value || 'DISTRIBUTED_SYSTEMS';
+      const advDocTitle = (document.getElementById('obAdvDocTitle')?.value || '').trim() || 'Lock Invariants and Sweeper Policies';
+      const advDocContent = (document.getElementById('obAdvDocContent')?.value || '').trim() || 'Kanban holds primary lock. Daemons must emit 15s heartbeats. Expired locks after 60s MUST reap to DLQ.';
+
+      const taskTitle = (document.getElementById('obTaskTitle')?.value || '').trim() || 'Establish Host Daemon WebSocket Handshake & Telemetry';
+      const taskDesc = (document.getElementById('obTaskDesc')?.value || '').trim() || 'Connect execution daemon to /ws/daemon/{daemon_id}, stream stdout, and verify 15s heartbeats.';
+      const taskPriority = document.getElementById('obTaskPriority')?.value || 'HIGH';
+
       const payload = {
         organization: {
-          name: document.getElementById('obOrgName').value.trim(),
-          mission: document.getElementById('obOrgMission').value.trim(),
-          project_tag: document.getElementById('obOrgTag').value.trim()
+          name: orgName,
+          mission: orgMission,
+          project_tag: orgTag
         },
         llm_provider: {
           provider_type: selectedProviderPreset,
-          provider_name: document.getElementById('obLlmName').value.trim(),
-          base_url: document.getElementById('obLlmBaseUrl').value.trim() || null,
-          api_key: document.getElementById('obLlmApiKey').value.trim() || null,
-          default_model: document.getElementById('obLlmDefaultModel').value.trim(),
-          advisor_reasoning_model: document.getElementById('obLlmAdvisorModel').value.trim(),
+          provider_name: llmName,
+          base_url: baseUrl,
+          api_key: apiKey,
+          default_model: defModel,
+          advisor_reasoning_model: advModel,
           temperature: 0.7,
           max_tokens: 4096
         },
         lead_agent: {
-          name: document.getElementById('obAgentName').value.trim(),
-          role: document.getElementById('obAgentRole').value.trim(),
-          backstory: document.getElementById('obAgentBackstory').value.trim(),
-          adapter_type: document.getElementById('obAgentAdapter').value,
-          monthly_budget_usd: parseFloat(document.getElementById('obAgentBudget').value) || 100.0
+          name: agentName,
+          role: agentRole,
+          backstory: agentBackstory,
+          adapter_type: agentAdapter,
+          monthly_budget_usd: agentBudget
         },
         advisor: {
-          name: document.getElementById('obAdvName').value.trim(),
-          domain: document.getElementById('obAdvDomain').value,
-          knowledge_title: document.getElementById('obAdvDocTitle').value.trim(),
-          knowledge_content: document.getElementById('obAdvDocContent').value.trim()
+          name: advName,
+          domain: advDomain,
+          knowledge_title: advDocTitle,
+          knowledge_content: advDocContent
         },
         initial_task: {
-          title: document.getElementById('obTaskTitle').value.trim(),
-          description: document.getElementById('obTaskDesc').value.trim(),
-          priority: document.getElementById('obTaskPriority').value
+          title: taskTitle,
+          description: taskDesc,
+          priority: taskPriority
         }
       };
 
@@ -1026,14 +1052,23 @@ def get_dashboard_html() -> str:
           logToTerminal(`[ONBOARDING] Company '${payload.organization.name}' successfully initialized in database.`, 'emerald');
         } else {
           const err = await res.json();
-          alert('Onboarding failed: ' + (err.detail || 'Server error'));
+          let errorMsg = 'Server rejected input.';
+          if (Array.isArray(err.detail)) {
+            errorMsg = err.detail.map(d => typeof d === 'object' ? `${(d.loc || []).join('.')}: ${d.msg}` : d).join('\\n');
+          } else if (typeof err.detail === 'string') {
+            errorMsg = err.detail;
+          } else if (err.message) {
+            errorMsg = err.message;
+          }
+          alert('Onboarding failed:\\n' + errorMsg);
         }
       } catch (err) {
-        alert('Network error completing onboarding');
+        alert('Network error completing onboarding: ' + (err.message || err));
       } finally {
         btn.innerText = '🚀 Launch Organization & Save to Database';
         btn.disabled = false;
       }
+
     }
 
     async function resetOnboardingFresh() {

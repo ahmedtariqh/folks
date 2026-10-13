@@ -8,31 +8,31 @@ class LLMProviderSettingSchema(BaseModel):
     api_key: Optional[str] = Field(default=None, description="API Key or Bearer Token (optional for local models)")
     default_model: str = Field(default="claude-3-7-sonnet", description="Model identifier for standard agents")
     advisor_reasoning_model: str = Field(default="claude-3-7-sonnet-thought", description="Deep reasoning model for Board of Advisors")
-    temperature: float = Field(default=0.7, ge=0.0, le=2.0)
-    max_tokens: int = Field(default=4096, ge=256, le=128000)
+    temperature: Optional[float] = Field(default=0.7)
+    max_tokens: Optional[int] = Field(default=4096)
 
 class OnboardingOrganizationSchema(BaseModel):
-    name: str = Field(..., min_length=2, max_length=255, description="Company or Team name")
-    mission: str = Field(..., min_length=5, description="High-level company mission and operating directives")
-    project_tag: str = Field(default="folks_core", min_length=2, max_length=100)
+    name: str = Field(default="Apex Autonomous Labs", description="Company or Team name")
+    mission: Optional[str] = Field(default="", description="High-level company mission and operating directives")
+    project_tag: str = Field(default="folks_core", description="Project tag")
 
 class OnboardingLeadAgentSchema(BaseModel):
-    name: str = Field(..., min_length=2, max_length=100)
+    name: str = Field(default="Nova - Lead Orchestrator", description="Agent name")
     role: str = Field(default="Lead Orchestrator")
     backstory: Optional[str] = Field(default="")
     adapter_type: str = Field(default="host_cli")
-    monthly_budget_usd: float = Field(default=100.0, ge=0.0)
+    monthly_budget_usd: Optional[float] = Field(default=100.0)
 
 class OnboardingAdvisorSchema(BaseModel):
-    name: str = Field(default="Dr. Aris Thorne")
-    domain: str = Field(default="DISTRIBUTED_SYSTEMS")
+    name: Optional[str] = Field(default="Dr. Aris Thorne")
+    domain: Optional[str] = Field(default="DISTRIBUTED_SYSTEMS")
     knowledge_title: Optional[str] = Field(default="Distributed Consensus & Lock Invariants")
     knowledge_content: Optional[str] = Field(default="State machine invariants: Kanban holds primary lock, War Rooms are ephemeral subroutines. Heartbeats must ping every 15s; expired locks must reap to DLQ.")
 
 class OnboardingTaskSchema(BaseModel):
-    title: str = Field(default="Verify Local Host Daemon 15s Heartbeat Ping")
+    title: Optional[str] = Field(default="Verify Local Host Daemon 15s Heartbeat Ping")
     description: Optional[str] = Field(default="Establish WebSocket handshake with /ws/daemon/{daemon_id} and maintain 15-second heartbeat intervals.")
-    priority: str = Field(default="HIGH")
+    priority: Optional[str] = Field(default="HIGH")
 
 class OnboardingSubmitRequest(BaseModel):
     organization: OnboardingOrganizationSchema
@@ -51,3 +51,4 @@ class OnboardingStatusResponse(BaseModel):
     total_agents: int = 0
     total_tasks: int = 0
     total_advisors: int = 0
+

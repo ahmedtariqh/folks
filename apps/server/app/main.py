@@ -12,13 +12,15 @@ if str(PROJECT_ROOT) not in sys.path:
 import asyncio
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.exceptions import RequestValidationError
 
 from app.core.config import settings
 from app.db.session import init_db
 from app.core.reaper import run_lock_sweeper_loop
+
 
 from app.api.v1.agents import router as agents_router
 from app.api.v1.teams import router as teams_router
@@ -59,7 +61,22 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    errors = exc.errors()
+    error_details = []
+    for err in errors:
+        loc = " -> ".join(str(l) for l in err.get("loc", []))
+        msg = err.get("msg", "Invalid value")
+        error_details.append(f"{loc}: {msg}")
+    logger.error(f"422 Validation Error on {request.method} {request.url.path}: {error_details}")
+    return JSONResponse(
+        status_code=422,
+        content={"detail": error_details, "raw_errors": errors}
+    )
+
 # CORS
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,

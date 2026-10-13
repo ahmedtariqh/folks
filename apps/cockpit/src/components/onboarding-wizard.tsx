@@ -118,37 +118,37 @@ export function OnboardingWizard({ onCompleted }: OnboardingWizardProps) {
     try {
       const payload = {
         organization: {
-          name: orgName,
-          mission: orgMission,
-          project_tag: orgTag,
+          name: orgName.trim() || "Apex Autonomous Labs",
+          mission: orgMission.trim() || "Build high-reliability autonomous engineering squads with strict lock handoffs.",
+          project_tag: orgTag.trim().replace(/\s+/g, "_") || "apex_core",
         },
         llm_provider: {
           provider_type: providerType,
-          provider_name: providerName,
-          base_url: baseUrl || null,
-          api_key: apiKey || null,
-          default_model: defaultModel,
-          advisor_reasoning_model: advisorModel,
+          provider_name: providerName.trim() || "Custom LLM Gateway",
+          base_url: baseUrl?.trim() || null,
+          api_key: apiKey?.trim() || null,
+          default_model: defaultModel.trim() || "claude-3-7-sonnet",
+          advisor_reasoning_model: advisorModel.trim() || "claude-3-7-sonnet-thought",
           temperature: 0.7,
           max_tokens: 4096,
         },
         lead_agent: {
-          name: agentName,
-          role: agentRole,
-          backstory: agentBackstory,
-          adapter_type: agentAdapter,
-          monthly_budget_usd: agentBudget,
+          name: agentName.trim() || "Nova - Lead Orchestrator",
+          role: agentRole.trim() || "Chief Executive Agent",
+          backstory: agentBackstory.trim() || "Architect and executive lead.",
+          adapter_type: agentAdapter || "host_cli",
+          monthly_budget_usd: Number(agentBudget) || 100.0,
         },
         advisor: {
-          name: advisorName,
-          domain: advisorDomain,
-          knowledge_title: advisorDocTitle,
-          knowledge_content: advisorDocContent,
+          name: advisorName.trim() || "Dr. Aris Thorne",
+          domain: advisorDomain || "DISTRIBUTED_SYSTEMS",
+          knowledge_title: advisorDocTitle.trim() || "Lock Invariants and Sweeper Policies",
+          knowledge_content: advisorDocContent.trim() || "Kanban holds primary lock. Daemons must emit 15s heartbeats.",
         },
         initial_task: {
-          title: taskTitle,
-          description: taskDesc,
-          priority: taskPriority,
+          title: taskTitle.trim() || "Establish Host Daemon WebSocket Handshake & Telemetry",
+          description: taskDesc.trim() || "Connect execution daemon to /ws/daemon/{daemon_id}.",
+          priority: taskPriority || "HIGH",
         },
       };
 
@@ -161,14 +161,24 @@ export function OnboardingWizard({ onCompleted }: OnboardingWizardProps) {
       if (res.ok) {
         onCompleted(payload);
       } else {
-        alert("Failed to complete onboarding.");
+        const err = await res.json();
+        let errorMsg = "Server rejected input.";
+        if (Array.isArray(err.detail)) {
+          errorMsg = err.detail.map((d: any) => typeof d === "object" ? `${(d.loc || []).join(".")}: ${d.msg}` : d).join("\n");
+        } else if (typeof err.detail === "string") {
+          errorMsg = err.detail;
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        alert("Onboarding failed:\n" + errorMsg);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Error submitting onboarding.");
+      alert("Error submitting onboarding: " + (err.message || err));
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
